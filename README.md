@@ -52,7 +52,7 @@ Para simplificar a configuração, o Docker foi utilizado para rodar o Elasticse
     Execute o script `download_allpdfs.py` para baixar os PDFs da UNIRIO e salvá-los na pasta `boletins`:
 
     ```bash
-    python download_pdfs.py
+    python download_allpdfs.py
     ```
 
 2. **Indexar o conteúdo dos PDFs no Elasticsearch:**
