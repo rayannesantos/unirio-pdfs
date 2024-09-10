@@ -25,7 +25,6 @@ def extract_text_from_pdf(pdf_path):
         print(f"Erro ao processar {pdf_path}: {str(e)}")
         return None
 
-# Indexar o texto no Elasticsearch
 def index_text(es, index_name, texts, doc_id):
     try:
         for page in texts:
@@ -44,7 +43,7 @@ def index_text(es, index_name, texts, doc_id):
     except Exception as e:
         print(f"Erro geral ao indexar documentos {doc_id}: {str(e)}")
 
-# Configuração do Elasticsearch
+
 es = Elasticsearch([{"scheme": "http", "host": "localhost", "port": 9200}])
 index_name = "boletins"
 
@@ -72,7 +71,7 @@ for filename in os.listdir(pdf_directory):
         pdf_path = os.path.join(pdf_directory, filename)
         texts = extract_text_from_pdf(pdf_path)
         if texts:
-            doc_id = filename.split(".")[0]  # Usa o nome do arquivo como ID do documento
+            doc_id = filename.split(".")[0] 
             index_text(es, index_name, texts, doc_id)
         else:
             print(f"Falha ao extrair texto de {pdf_path}")

@@ -5,7 +5,7 @@ from elasticsearch import Elasticsearch
 es = Elasticsearch([{"scheme": "http", "host": "localhost", "port": 9200}])
 index_name = "boletins"
 
-# Buscar no Elasticsearch e salvar resultados em arquivos de texto
+# Busca no Elasticsearch 
 def search_in_elasticsearch(es, index_name, query, description):
     try:
         print(f"Buscando: {description}")
@@ -28,12 +28,11 @@ def search_in_elasticsearch(es, index_name, query, description):
         else:
             result_text += f"Nenhum resultado encontrado para '{description}'.\n"
 
-        # Salvar resultado em arquivo de texto
         save_search_result(description, result_text)
     except Exception as e:
         print(f"Erro ao buscar '{description}': {str(e)}")
 
-# Salvar o resultado da busca em um arquivo de texto
+
 def save_search_result(query, result_text):
     directory = './resultados'
     if not os.path.exists(directory):
@@ -45,10 +44,11 @@ def save_search_result(query, result_text):
         file.write(result_text)
     print(f"Resultado salvo com sucesso em {file_name}.")
 
-# Lista de queries mais complexas
+
+# Queries
 queries = [
     {
-        "description": "Busca por termo 'Computação'",
+        "description": "Busca por palavra 'Computação'",
         "query": {
             "match": {
                 "content": "Computação"
@@ -56,18 +56,7 @@ queries = [
         }
     },
     {
-        "description": "Busca por data específica (2023)",
-        "query": {
-            "range": {
-                "publication_date": {
-                    "gte": "2023-01-01",
-                    "lte": "2023-12-31"
-                }
-            }
-        }
-    },
-    {
-        "description": "Busca por múltiplos termos 'Computação' e 'universidade'",
+        "description": "Busca por palavras 'Computação' e 'universidade'",
         "query": {
             "bool": {
                 "must": [
@@ -78,7 +67,7 @@ queries = [
         }
     },
     {
-        "description": "Portaria de homologação ou aprovação do estágio probatório do professor José Ricardo Cereja",
+        "description": "Busca do estágio probatório do professor José Ricardo Cereja",
         "query": {
             "bool": {
                 "must": [
@@ -92,6 +81,14 @@ queries = [
             }
         }
     },
+     {
+        "description": "Busca por palavra 'Cereja' e 'interstício'",
+        "query": {
+            "match": {
+                "content": "Cereja"
+            }
+        }
+    },
     {
         "description": "Busca usando regex para variações de 'Computação'",
         "query": {
@@ -101,13 +98,13 @@ queries = [
         }
     },
     {
-        "description": "Agregação para contagem de palavras mais comuns",
+        "description": "Contagem de palavras mais comuns",
         "query": {
             "aggs": {
                 "common_words": {
                     "terms": {
                         "field": "content.keyword",
-                        "size": 10  # Número de palavras mais comuns a retornar
+                        "size": 10 
                     }
                 }
             }
@@ -126,8 +123,8 @@ queries = [
     }
 ]
 
-# Testa todas as buscas e salva os resultados em arquivos
+
 for query_info in queries:
     search_in_elasticsearch(es, index_name, query_info["query"], query_info["description"])
 
-print("Todas as consultas foram realizadas e os resultados foram salvos.")
+print("Todas as consultas foram realizadas")
